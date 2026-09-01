@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ paper_name }} | Dashboard</title>
+<style>
+  :root {
+    --paper: #faf7f0; --ink: #1a1a18; --muted: #6b6b64;
+    --rule: #d4d0c8; --accent: #8b2500; --accent-bg: #fef3ee;
+    --good: #2d6a4f; --good-bg: #edf6f0;
+    --bad: #9b2226; --bad-bg: #fdecea;
+    --card: #fff; --card-shadow: rgba(0,0,0,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #191917; --ink: #e8e4da; --muted: #97948a;
+      --rule: #3a3a35; --accent: #e0865e; --accent-bg: #2a1f18;
+      --good: #52b788; --good-bg: #1a2e22;
+      --bad: #e5383b; --bad-bg: #2e1a1a;
+      --card: #222220; --card-shadow: rgba(0,0,0,.3);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5; padding: 0;
+  }
+  .top-bar {
+    background: var(--card); border-bottom: 1px solid var(--rule);
+    padding: .8rem 1.5rem; display: flex; align-items: center; gap: 1rem;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .top-bar h1 {
+    font-size: 1.2rem; font-weight: 700; font-variant: small-caps;
+    letter-spacing: .05em;
+  }
+  .top-bar .backend { font-size: .8rem; color: var(--muted);
+    background: var(--accent-bg); padding: .15rem .5rem; border-radius: 3px; }
+  .container { max-width: 72rem; margin: 0 auto; padding: 1.5rem; }
+
+  /* Stat cards */
+  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    gap: 1rem; margin-bottom: 2rem; }
+  .stat {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+    padding: 1rem; text-align: center;
+    box-shadow: 0 1px 3px var(--card-shadow);
+  }
+  .stat .val { font-size: 1.8rem; font-weight: 700; }
+  .stat .lbl { font-size: .75rem; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--muted); margin-top: .2rem; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--rule); margin-bottom: 1.5rem; }
+  .tab {
+    padding: .6rem 1.2rem; cursor: pointer; border: none; background: none;
+    font-size: .9rem; color: var(--muted); font-weight: 600;
+    border-bottom: 2px solid transparent; margin-bottom: -2px;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Articles table */
+  .tbl-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  th { text-align: left; font-size: .72rem; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--muted); padding: .5rem .6rem;
+    border-bottom: 2px solid var(--rule); white-space: nowrap; }
+  td { padding: .55rem .6rem; border-bottom: 1px solid var(--rule);
+    vertical-align: top; }
+  tr:hover td { background: var(--accent-bg); }
+  td a { color: var(--accent); text-decoration: none; }
+  td a:hover { text-decoration: underline; }
+
+  /* Score badge */
+  .score-badge {
+    display: inline-block; min-width: 2.2rem; text-align: center;
+    padding: .1rem .4rem; border-radius: 3px; font-weight: 700; font-size: .85rem;
+  }
+  .score-hi { background: var(--good-bg); color: var(--good); }
+  .score-mid { background: var(--accent-bg); color: var(--accent); }
+  .score-lo { background: var(--bad-bg); color: var(--bad); }
+
+  /* Feedback buttons */
+  .fb-btns { display: flex; gap: .3rem; }
+  .fb-btn {
+    border: 1px solid var(--rule); background: var(--card); border-radius: 4px;
+    padding: .2rem .5rem; cursor: pointer; font-size: .9rem; line-height: 1;
+  }
+  .fb-btn:hover { border-color: var(--accent); }
+  .fb-btn.voted { opacity: .5; pointer-events: none; }
+
+  /* Feedback log */
+  .fb-item {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+    padding: .8rem 1rem; margin-bottom: .6rem;
+    display: flex; align-items: center; gap: .8rem;
+  }
+  .fb-vote { font-size: 1.3rem; }
+  .fb-meta { font-size: .8rem; color: var(--muted); }
+
+  /* Cost table */
+  .cost-total { font-size: 1rem; color: var(--muted); margin-bottom: 1rem; }
+  .cost-total strong { color: var(--ink); font-size: 1.2rem; }
+
+  /* Editions list */
+  .ed-list { list-style: none; padding: 0; }
+  .ed-list li {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+    margin-bottom: .5rem; overflow: hidden;
+  }
+  .ed-list li a {
+    display: block; padding: .7rem 1rem; color: inherit; text-decoration: none;
+    font-size: 1rem;
+  }
+  .ed-list li a:hover { background: var(--accent-bg); }
+
+  .empty { color: var(--muted); font-style: italic; padding: 2rem 0; text-align: center; }
+  .loading { color: var(--muted); text-align: center; padding: 2rem 0; }
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <h1>{{ paper_name }}</h1>
+  <span>Dashboard</span>
+  <span class="backend" id="backend-badge"></span>
+</div>
+
+<div class="container">
+  <!-- Stats -->
+  <div class="stats" id="stats">
+    <div class="stat"><div class="val" id="s-editions">-</div><div class="lbl">Editions</div></div>
+    <div class="stat"><div class="val" id="s-articles">-</div><div class="lbl">Scored Articles</div></div>
+    <div class="stat"><div class="val" id="s-feedback">-</div><div class="lbl">Feedback</div></div>
+    <div class="stat"><div class="val" id="s-cost">-</div><div class="lbl">Total Cost</div></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" data-tab="articles">Articles</button>
+    <button class="tab" data-tab="editions">Editions</button>
+    <button class="tab" data-tab="feedback">Feedback</button>
+    <button class="tab" data-tab="costs">Costs</button>
+  </div>
+
+  <!-- Articles panel -->
+  <div class="panel active" id="p-articles">
+    <div class="loading" id="articles-loading">Loading articles...</div>
+    <div class="tbl-wrap"><table id="articles-table" style="display:none">
+      <thead><tr>
+        <th>Score</th><th>Title</th><th>Section</th><th>Source</th><th>Backend</th><th></th>
+      </tr></thead>
+      <tbody id="articles-body"></tbody>
+    </table></div>
+    <div class="empty" id="articles-empty" style="display:none">No scored articles in the current window.</div>
+  </div>
+
+  <!-- Editions panel -->
+  <div class="panel" id="p-editions">
+    <div class="loading" id="editions-loading">Loading editions...</div>
+    <ul class="ed-list" id="editions-list"></ul>
+    <div class="empty" id="editions-empty" style="display:none">No editions yet. Run <code>frontline run</code> to generate one.</div>
+  </div>
+
+  <!-- Feedback panel -->
+  <div class="panel" id="p-feedback">
+    <div class="loading" id="feedback-loading">Loading feedback...</div>
+    <div id="feedback-list"></div>
+    <div class="empty" id="feedback-empty" style="display:none">No feedback yet. Use the thumbs on the Articles tab.</div>
+  </div>
+
+  <!-- Costs panel -->
+  <div class="panel" id="p-costs">
+    <div class="loading" id="costs-loading">Loading costs...</div>
+    <div class="cost-total" id="cost-total"></div>
+    <div class="tbl-wrap"><table id="costs-table" style="display:none">
+      <thead><tr>
+        <th>Day</th><th>Stage</th><th>Model</th><th>Input Tok</th><th>Output Tok</th><th>Cost</th><th>Calls</th>
+      </tr></thead>
+      <tbody id="costs-body"></tbody>
+    </table></div>
+    <div class="empty" id="costs-empty" style="display:none">No API costs recorded.</div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // Tabs
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('p-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  function scoreCls(s) {
+    if (s >= 7) return 'score-hi';
+    if (s >= 4) return 'score-mid';
+    return 'score-lo';
+  }
+  function esc(s) {
+    const d = document.createElement('div');
+    d.textContent = s || '';
+    return d.innerHTML;
+  }
+  function fmt$(n) {
+    return '$' + Number(n).toFixed(4);
+  }
+
+  // Stats
+  fetch('/api/stats').then(r => r.json()).then(d => {
+    document.getElementById('s-editions').textContent = d.edition_count;
+    document.getElementById('s-articles').textContent = d.scored_count;
+    document.getElementById('s-feedback').textContent = d.feedback_count;
+    document.getElementById('s-cost').textContent = fmt$(d.total_cost_usd);
+    document.getElementById('backend-badge').textContent = d.backend;
+  }).catch(() => {});
+
+  // Articles
+  fetch('/api/articles?limit=100').then(r => r.json()).then(rows => {
+    document.getElementById('articles-loading').style.display = 'none';
+    if (!rows.length) { document.getElementById('articles-empty').style.display = ''; return; }
+    document.getElementById('articles-table').style.display = '';
+    const tbody = document.getElementById('articles-body');
+    rows.forEach(r => {
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td><span class="score-badge ' + scoreCls(r.score) + '">' + r.score.toFixed(1) + '</span></td>' +
+        '<td><a href="' + esc(r.url) + '" target="_blank">' + esc(r.title) + '</a>' +
+          (r.tldr ? '<br><small style="color:var(--muted)">' + esc(r.tldr) + '</small>' : '') +
+        '</td>' +
+        '<td>' + esc(r.section) + '</td>' +
+        '<td>' + esc(r.source) + '</td>' +
+        '<td><small>' + esc(r.backend) + '</small></td>' +
+        '<td><div class="fb-btns">' +
+          '<button class="fb-btn" data-id="' + r.id + '" data-vote="1" title="Thumbs up">&#x1F44D;</button>' +
+          '<button class="fb-btn" data-id="' + r.id + '" data-vote="-1" title="Thumbs down">&#x1F44E;</button>' +
+        '</div></td>';
+      tbody.appendChild(tr);
+    });
+
+    tbody.addEventListener('click', e => {
+      const btn = e.target.closest('.fb-btn');
+      if (!btn || btn.classList.contains('voted')) return;
+      const aid = parseInt(btn.dataset.id);
+      const vote = parseInt(btn.dataset.vote);
+      fetch('/api/feedback', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({article_id: aid, vote: vote})
+      }).then(r => r.json()).then(d => {
+        if (d.ok) {
+          btn.classList.add('voted');
+          btn.closest('.fb-btns').querySelectorAll('.fb-btn').forEach(b => {
+            if (b !== btn) b.classList.add('voted');
+          });
+        }
+      });
+    });
+  }).catch(() => {
+    document.getElementById('articles-loading').textContent = 'Failed to load articles.';
+  });
+
+  // Editions
+  fetch('/api/editions').then(r => r.json()).then(rows => {
+    document.getElementById('editions-loading').style.display = 'none';
+    if (!rows.length) { document.getElementById('editions-empty').style.display = ''; return; }
+    const ul = document.getElementById('editions-list');
+    rows.forEach(e => {
+      const li = document.createElement('li');
+      li.innerHTML = '<a href="/editions/' + esc(e.date) + '.html">' + esc(e.date) + '</a>';
+      ul.appendChild(li);
+    });
+  }).catch(() => {
+    document.getElementById('editions-loading').textContent = 'Failed to load editions.';
+  });
+
+  // Feedback
+  fetch('/api/feedback?limit=100').then(r => r.json()).then(rows => {
+    document.getElementById('feedback-loading').style.display = 'none';
+    if (!rows.length) { document.getElementById('feedback-empty').style.display = ''; return; }
+    const div = document.getElementById('feedback-list');
+    rows.forEach(f => {
+      const el = document.createElement('div');
+      el.className = 'fb-item';
+      el.innerHTML =
+        '<span class="fb-vote">' + (f.vote === 1 ? '&#x1F44D;' : '&#x1F44E;') + '</span>' +
+        '<div><strong>' + esc(f.title) + '</strong> <small>(' + esc(f.source) + ')</small>' +
+          (f.reason ? '<br><small>' + esc(f.reason) + '</small>' : '') +
+          '<div class="fb-meta">' + esc(f.created_at) + '</div>' +
+        '</div>';
+      div.appendChild(el);
+    });
+  }).catch(() => {
+    document.getElementById('feedback-loading').textContent = 'Failed to load feedback.';
+  });
+
+  // Costs
+  fetch('/api/costs').then(r => r.json()).then(rows => {
+    document.getElementById('costs-loading').style.display = 'none';
+    if (!rows.length) { document.getElementById('costs-empty').style.display = ''; return; }
+    const total = rows.reduce((s, r) => s + r.cost_usd, 0);
+    document.getElementById('cost-total').innerHTML = 'Total spend: <strong>' + fmt$(total) + '</strong>';
+    document.getElementById('costs-table').style.display = '';
+    const tbody = document.getElementById('costs-body');
+    rows.forEach(r => {
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + esc(r.day) + '</td>' +
+        '<td>' + esc(r.stage) + '</td>' +
+        '<td><small>' + esc(r.model) + '</small></td>' +
+        '<td>' + r.input_tokens.toLocaleString() + '</td>' +
+        '<td>' + r.output_tokens.toLocaleString() + '</td>' +
+        '<td>' + fmt$(r.cost_usd) + '</td>' +
+        '<td>' + r.calls + '</td>';
+      tbody.appendChild(tr);
+    });
+  }).catch(() => {
+    document.getElementById('costs-loading').textContent = 'Failed to load costs.';
+  });
+})();
+</script>
+</body>
+</html>

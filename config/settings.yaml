@@ -1,0 +1,87 @@
+# Frontline settings
+# All settings have sensible defaults. Only change what you need.
+
+paper_name: "Frontline"
+
+# AI backend
+# Which backend scores articles for relevance.
+#   "claude"    - best quality, needs ANTHROPIC_API_KEY (default)
+#   "ollama"    - local & free, needs Ollama running with a model pulled
+#   "heuristic" - offline keyword fallback, no AI needed, lower quality
+scoring_backend: claude
+
+# Models used by the Claude backend.
+models:
+  triage: claude-haiku-4-5        # scores every article (cheap, fast)
+  editor: claude-sonnet-5         # writes the newspaper (quality)
+  discover: claude-sonnet-5       # proposes feeds from your profile
+
+# If the editor model hits a safety refusal (can happen with dense
+# security content), the edition is retried on this model.
+# Set to "" to disable the fallback.
+editor_fallback: claude-haiku-4-5
+
+# Ollama model (only used when scoring_backend is "ollama").
+ollama_model: llama3.1:8b
+
+# Batch API
+# 50% cost discount, but runs take minutes instead of seconds.
+# Only applies to Claude. Set false for instant runs at full price.
+use_batch: true
+batch_poll_seconds: 20
+
+# Ingestion
+max_articles_per_feed: 25       # newest N entries per feed per run
+max_new_articles_per_run: 200   # hard cap on triage volume (cost guard)
+article_clip_chars: 8000        # article text clipped to this for triage
+
+# Edition composition
+top_articles: 30          # best-scoring candidates handed to the editor
+min_score: 4              # articles below this never make the paper (0-10)
+min_articles: 5           # if fewer pass min_score, threshold is relaxed
+window_days: 10           # rolling window for unpublished articles
+editor_clip_chars: 12000  # article text clipped to this for the editor
+drop_fluff: true          # exclude items flagged as marketing/fluff
+
+# Pre-filter (Stage 0)
+# Local embeddings drop ~70-80% of articles before LLM scoring.
+prefilter:
+  enabled: true
+  keep_fraction: 0.30      # keep top 30% by embedding similarity
+  min_candidates: 20       # never pre-filter below this many items
+  max_llm_items: 300       # hard ceiling on items sent to the LLM
+
+# Embeddings
+# "fastembed" - local, accurate, needs the [embeddings] extra
+# "hashing"  - deterministic offline fallback, no download needed
+embeddings:
+  provider: fastembed
+  model: BAAI/bge-small-en-v1.5
+  dim: 384
+
+# Dedup
+dedup:
+  similarity_threshold: 0.86   # cosine sim above which items cluster
+
+# Sections
+# The triager assigns articles to these sections (plus "Other").
+sections:
+  - Technology
+  - Science & Research
+  - Business & Economy
+  - Security
+  - World
+  - Culture & Ideas
+  - Your Projects
+
+# Dashboard
+web:
+  host: 127.0.0.1
+  port: 8787
+
+# Logging
+logging:
+  console_level: INFO
+  dir: logs
+  keep_runs: 3
+  trace_scoring: true
