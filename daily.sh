@@ -12,6 +12,8 @@ if [ -n "$GITHUB_TOKEN" ]; then
     git remote add personal "https://${GITHUB_TOKEN}@github.com/mars-sec/frontline-personal.git"
 fi
 
+git pull personal main || echo "Pull failed. Running with local state."
+
 pip install --quiet -e ".[claude,embeddings]"
 
 frontline run
