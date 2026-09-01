@@ -12,7 +12,7 @@ if [ -n "$GITHUB_TOKEN" ]; then
     git remote add personal "https://${GITHUB_TOKEN}@github.com/mars-sec/frontline-personal.git"
 fi
 
-pip install --quiet ".[claude,embeddings]"
+pip install --quiet -e ".[claude,embeddings]"
 
 frontline run
 
