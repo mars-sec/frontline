@@ -16,7 +16,7 @@ git pull personal main || echo "Pull failed. Running with local state."
 
 pip install --quiet -e ".[claude,embeddings]"
 
-frontline run
+frontline run --force
 
 today=$(date +%Y-%m-%d)
 edition="editions/${today}.html"
