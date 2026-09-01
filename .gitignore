@@ -4,7 +4,6 @@ config/sources.yaml.bak
 .env
 
 # Generated output
-editions/
 data/
 logs/
 feed.xml
