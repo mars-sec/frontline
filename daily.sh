@@ -3,6 +3,7 @@ set -e
 
 cd /repo
 
+git config --global --add safe.directory /repo
 git config user.name "Marshall Yanis"
 git config user.email "marshall.e.yanis@gmail.com"
 
