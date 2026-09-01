@@ -46,14 +46,19 @@ def render_edition(store: Store, settings: Settings, edition: Edition,
 
 
 def render_index(store: Store, settings: Settings) -> Path:
-    """Render the archive index page."""
+    """Copy the latest edition as index.html and generate archive.html."""
     EDITIONS_DIR.mkdir(parents=True, exist_ok=True)
-    env = _env()
     editions = store.get_editions()
-    html = env.get_template("index.html.j2").render(
+    if not editions:
+        return EDITIONS_DIR / "index.html"
+    latest = EDITIONS_DIR / f"{editions[0]['date']}.html"
+    out = EDITIONS_DIR / "index.html"
+    if latest.exists():
+        out.write_text(latest.read_text(encoding="utf-8"), encoding="utf-8")
+    env = _env()
+    archive = env.get_template("index.html.j2").render(
         paper_name=settings.paper_name,
         editions=[dict(e) for e in editions],
     )
-    out = EDITIONS_DIR / "index.html"
-    out.write_text(html, encoding="utf-8")
+    (EDITIONS_DIR / "archive.html").write_text(archive, encoding="utf-8")
     return out

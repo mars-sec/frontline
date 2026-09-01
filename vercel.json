@@ -1,5 +1,12 @@
 {
   "buildCommand": "",
   "outputDirectory": "editions",
-  "framework": null
+  "framework": null,
+  "redirects": [
+    {
+      "source": "/((?!index\\.html$|favicon\\.).*)",
+      "destination": "/",
+      "permanent": false
+    }
+  ]
 }

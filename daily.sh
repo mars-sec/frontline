@@ -22,7 +22,6 @@ today=$(date +%Y-%m-%d)
 edition="editions/${today}.html"
 
 if [ -f "$edition" ]; then
-    cp "$edition" editions/index.html
     echo "Edition $today ready."
 else
     echo "No new edition generated."

@@ -3,40 +3,193 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Frontline | Archive</title>
+<title>Frontline | Monday, August 31, 2026</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
 <link rel="icon" sizes="any" href="favicon.ico">
 <style>
-  :root { --paper: #faf7f0; --ink: #1a1a18; --muted: #6b6b64; }
+  :root {
+    --paper: #faf7f0;
+    --ink: #1a1a18;
+    --rule: #1a1a18;
+    --muted: #6b6b64;
+    --accent: #8b2500;
+  }
   @media (prefers-color-scheme: dark) {
-    :root { --paper: #191917; --ink: #e8e4da; --muted: #97948a; }
+    :root {
+      --paper: #191917;
+      --ink: #e8e4da;
+      --rule: #e8e4da;
+      --muted: #97948a;
+      --accent: #e0865e;
+    }
   }
   * { box-sizing: border-box; margin: 0; }
-  body { background: var(--paper); color: var(--ink);
-    font-family: Georgia, "Times New Roman", serif; padding: 3rem 1rem; }
-  .sheet { max-width: 40rem; margin: 0 auto; }
-  h1 { font-variant: small-caps; font-weight: 900; text-align: center;
-    border-bottom: 4px double var(--ink); padding-bottom: .8rem; }
-  ul { list-style: none; margin-top: 1.5rem; }
-  li { border-bottom: 1px solid var(--muted); }
-  li a { display: block; padding: .8rem .2rem; color: inherit;
-    text-decoration: none; font-size: 1.1rem; }
-  li a:hover { text-decoration: underline; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Georgia, "Times New Roman", serif;
+    line-height: 1.55;
+    padding: 2rem 1rem 4rem;
+  }
+  .sheet { max-width: 68rem; margin: 0 auto; }
+  header.masthead { text-align: center; border-bottom: 4px double var(--rule); padding-bottom: 1rem; }
+  .masthead h1 {
+    font-size: clamp(2.4rem, 7vw, 4.5rem);
+    font-weight: 900;
+    letter-spacing: .02em;
+    font-variant: small-caps;
+  }
+  .dateline {
+    display: flex; justify-content: space-between; gap: 1rem;
+    font-size: .85rem; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--muted);
+    border-top: 1px solid var(--rule); margin-top: .6rem; padding-top: .4rem;
+  }
+  .letter {
+    margin: 1.6rem auto; max-width: 46rem; font-style: italic;
+    color: var(--ink); border-left: 3px solid var(--accent);
+    padding-left: 1rem; font-size: 1.02rem;
+  }
+  .letter .signoff { display: block; margin-top: .4rem; font-style: normal;
+    font-size: .8rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+  article.lead { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    padding: 1.6rem 0; margin-bottom: 2rem; }
+  article.lead h2 { font-size: clamp(1.7rem, 4.5vw, 2.6rem); line-height: 1.15; font-weight: 800; }
+  article.lead .summary { font-size: 1.12rem; margin-top: .8rem; max-width: 52rem; }
+  .why {
+    margin-top: .7rem; font-size: .95rem; color: var(--accent);
+  }
+  .why::before { content: "Why you care: "; font-weight: 700; font-variant: small-caps; }
+  .byline { font-size: .8rem; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--muted); margin-top: .7rem; }
+  .byline a { color: inherit; }
+  section.paper-section { margin-bottom: 2.2rem; }
+  section.paper-section > h3 {
+    font-size: 1rem; font-variant: small-caps; letter-spacing: .18em;
+    border-bottom: 2px solid var(--rule); padding-bottom: .25rem; margin-bottom: 1rem;
+  }
+  .stories { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+    gap: 1.4rem 2rem; }
+  .stories article h4 { font-size: 1.18rem; line-height: 1.25; font-weight: 700; }
+  .stories article .summary { margin-top: .45rem; font-size: .96rem; }
+  a.story-link { color: inherit; text-decoration: none; }
+  a.story-link:hover h2, a.story-link:hover h4 { text-decoration: underline; }
+  footer { text-align: center; font-size: .8rem; color: var(--muted);
+    border-top: 4px double var(--rule); padding-top: 1rem; }
+  footer a { color: inherit; }
 </style>
 </head>
 <body>
 <div class="sheet">
-  <h1>Frontline | Archive</h1>
-  <ul>
-    
-    <li><a href="2026-09-01.html">2026-09-01</a></li>
-    
-    <li><a href="2026-08-31.html">2026-08-31</a></li>
-    
-    <li><a href="2026-08-30.html">2026-08-30</a></li>
-    
-  </ul>
+  <header class="masthead">
+    <h1>Frontline</h1>
+    <div class="dateline">
+      <span>Monday, August 31, 2026</span>
+      <span>An edition of one</span>
+      <span>Vol. Daily</span>
+    </div>
+  </header>
+
+  <div class="letter">
+    Today's throughline is that the adversary's toolbox is starting to look a lot like yours. The Bissa scanner story is the one to sit with: an operator running Claude Code as an ops assistant to industrialize React2Shell exploitation at internet scale, which should reframe how you think about both offensive tooling and the blue-side triage you're leaving behind. Pair that with Project Zero's two deep exploit-dev writeups — macOS CoreAudio heap feng shui, and a decades-old Windows API whose own documentation turns out to be wrong — for the primary-source technical meat you actually came here for. Cloudflare's Spectre revisit and Trail of Bits' RSA-factoring piece round out the research side with the kind of 'read it twice and take notes' material worth blocking real time for. And once you're through those, the DFIR Report intrusion chains are a good gut-check on how all this theory becomes a 44-hour domain compromise in practice.
+    <span class="signoff">- Your Editor</span>
+  </div>
+
+  
+  <article class="lead">
+    <a class="story-link" href="https://thedfirreport.com/2026/04/22/bissa-scanner-exposed-ai-assisted-mass-exploitation-and-credential-harvesting">
+      <h2>Bissa Scanner: When the Threat Actor's Ops Center Runs on Claude Code</h2>
+    </a>
+    <p class="summary">The DFIR Report found an exposed operator server behind "Bissa scanner," a mass-exploitation platform weaponizing React2Shell (CVE-2025-55182) that scanned millions of internet-facing targets and confirmed over 900 successful compromises. Claude Code and OpenClaw were embedded directly in the threat actor's day-to-day workflow, troubleshooting and orchestrating the exploitation, hit-scoring, and secret-harvesting pipeline. Rather than dumping data indiscriminately, the operator triaged tens of thousands of stolen .env files and credentials across AI, cloud, payments, and database platforms, concentrating deeper collection on high-value victims in finance, crypto, and retail — and the sloppy server even exposed the operator's Telegram handle and alerting bots.</p>
+    <p class="why">This is a rare, granular look at an adversary using the same AI coding agents you're studying, to build and iterate exploitation tooling at internet scale — essential context for anyone thinking about where implant engineering and capability development are headed next.</p>
+    <p class="byline"><a href="https://thedfirreport.com/2026/04/22/bissa-scanner-exposed-ai-assisted-mass-exploitation-and-credential-harvesting">The DFIR Report</a></p>
+  </article>
+  
+
+  
+  <section class="paper-section">
+    <h3>Implant Engineering & Windows Internals</h3>
+    <div class="stories">
+      
+      <article>
+        <a class="story-link" href="https://projectzero.google/2026/01/sound-barrier-2.html"><h4>Turning a macOS CoreAudio Crash Into a Working Exploit</h4></a>
+        <p class="summary">Google Project Zero's second installment on CVE-2024-54529 walks through the full exploitation of a type-confusion bug in macOS's coreaudiod daemon, including a custom TinyInst-based heap dumper, an IDAPython hunt for exploitation primitives, and a chain that defeats malloc_tiny zeroing by reclaiming freed property-list memory into an uninitialized-field object. It's a rare blow-by-blow of real heap exploitation complete with dead ends, not just the polished final trick.</p>
+        <p class="why">This is exactly the caliber of primary-source exploit-dev writeup — dead ends, custom tooling, heap feng shui — that belongs in your implant/exploit-dev study queue.</p>
+        <p class="byline"><a href="https://projectzero.google/2026/01/sound-barrier-2.html">Google Project Zero</a></p>
+      </article>
+      
+      <article>
+        <a class="story-link" href="https://projectzero.google/2026/02/gphfh-deep-dive.html"><h4>Project Zero Cracks Open a Two-Decade-Old Windows API</h4></a>
+        <p class="summary">James Forshaw traces GetProcessHandleFromHwnd from its Vista-era windows-hook implementation through its move into the Win32k kernel, finding Microsoft's own documentation about its security model is largely wrong. The deep dive shows how a missing access check let any process with UI Access or equal integrity open handles to protected or sandboxed processes — the bug behind a public Quick Assist UAC bypass, fixed as CVE-2023-41772 — and how the fix still leaves gaps for higher-integrity callers.</p>
+        <p class="why">Straight into your Windows internals lane — a masterclass in reading kernel source and API documentation skeptically to find privilege-boundary bugs.</p>
+        <p class="byline"><a href="https://projectzero.google/2026/02/gphfh-deep-dive.html">Google Project Zero</a></p>
+      </article>
+      
+      <article>
+        <a class="story-link" href="https://www.thezdi.com/blog/2026/4/8/nodejs-trust-falls-dangerous-module-resolution-on-windows"><h4>C:\node_modules Is Still an Open Door on Every Windows Node App</h4></a>
+        <p class="summary">ZDI details a long-known but unpatched Node.js design quirk: on Windows, module resolution walks all the way up to C:\node_modules, a directory any low-privileged user can create and seed with malicious modules. The post demonstrates real local privilege escalation in npm CLI (now patched) and Discord's desktop app (unpatched, CVE-2026-0776), triggered whenever an optional dependency is missing — and Node.js, npm, and Discord all decline to treat it as a vulnerability.</p>
+        <p class="why">A textbook local-privesc primitive hiding in a security-policy loophole — solid tradecraft reference for red-teaming Electron/Node targets.</p>
+        <p class="byline"><a href="https://www.thezdi.com/blog/2026/4/8/nodejs-trust-falls-dangerous-module-resolution-on-windows">Zero Day Initiative Blog</a></p>
+      </article>
+      
+      <article>
+        <a class="story-link" href="https://www.reddit.com/r/netsec/comments/1w36tcq/privilege_escalation_from_iis_apppool_to_nt"><h4>SYSTEM From an App Pool, Courtesy of AD CS's RPC Endpoint</h4></a>
+        <p class="summary">A netsec-shared writeup outlines a privilege escalation path from an IIS application pool identity to NT AUTHORITY\SYSTEM by abusing an RPC endpoint exposed by Active Directory Certificate Services. It's light on detail but points at a real, useful chain for AD-heavy enterprise environments.</p>
+        <p class="why">AD CS abuse chains are a staple of red-team engagements in exactly the Windows-domain environments you're aiming to operate in professionally.</p>
+        <p class="byline"><a href="https://www.reddit.com/r/netsec/comments/1w36tcq/privilege_escalation_from_iis_apppool_to_nt">r/netsec</a></p>
+      </article>
+      
+    </div>
+  </section>
+  
+  <section class="paper-section">
+    <h3>Vulnerability Research: Crypto & Side Channels</h3>
+    <div class="stories">
+      
+      <article>
+        <a class="story-link" href="https://blog.cloudflare.com/revisiting-spectre-attacks-on-workers"><h4>Cloudflare Re-Ran Spectre Against Its Own Production Workers — And It Still Leaked</h4></a>
+        <p class="summary">Cloudflare's security team revisited remote Spectre attacks on Workers, building a new proof-of-concept that reliably leaked 12 bits per second at 99% accuracy from live production infrastructure, exploiting a gap in their 2021-era Dynamic Process Isolation defense. The published paper details the full chain: a speculative type-confusion gadget for arbitrary 64-bit reads, PLRU cache-based signal amplification, and a noisy remote WebSocket timer, all built around JavaScript running in tens of thousands of co-located tenants on the same process. The attack was already mitigated before publication with no signs of prior exploitation.</p>
+        <p class="why">A rigorous, code-level treatment of stabilizing microarchitectural side channels in a real multi-tenant cloud runtime — exactly the over-your-head-today material that pulls RE skills forward.</p>
+        <p class="byline"><a href="https://blog.cloudflare.com/revisiting-spectre-attacks-on-workers">Cloudflare Blog</a></p>
+      </article>
+      
+      <article>
+        <a class="story-link" href="https://blog.trailofbits.com/2026/06/12/factoring-short-sleeve-rsa-keys-with-polynomials"><h4>Cracking RSA Keys That Are Missing Half Their Randomness</h4></a>
+        <p class="summary">Trail of Bits and the badkeys project found hundreds of real-world RSA and DSA keys with structured blocks of zero bits — "short-sleeve" keys — that can be factored with a novel polynomial-based technique instead of brute-force integer factoring. They traced one pattern to a type-mismatch bug in old CompleteFTP code, recovering 603 RSA and 74 DSA private keys from internet scans, and connect the technique to General Number Field Sieve foundations.</p>
+        <p class="why">A clean lesson in turning a subtle key-generation bias into a practical break, with reverse-engineered root cause — good material for building crypto and protocol tooling intuition.</p>
+        <p class="byline"><a href="https://blog.trailofbits.com/2026/06/12/factoring-short-sleeve-rsa-keys-with-polynomials">Trail of Bits Blog</a></p>
+      </article>
+      
+    </div>
+  </section>
+  
+  <section class="paper-section">
+    <h3>Ransomware & Intrusion Tradecraft</h3>
+    <div class="stories">
+      
+      <article>
+        <a class="story-link" href="https://thedfirreport.com/2026/06/29/from-bing-search-to-ransomware-bumblebee-and-adaptixc2-deliver-akira-3"><h4>SEO-Poisoned 'ManageEngine' Installer Leads Straight to Akira Ransomware</h4></a>
+        <p class="summary">The DFIR Report traces a Bing SEO-poisoning campaign that lured IT admins to a fake ManageEngine OpManager download, sideloading a Bumblebee loader via a trojanized MSI that then dropped an AdaptixC2 beacon. Within 44 hours the actor had dumped NTDS.dit, exfiltrated 75GB via FileZilla/SFTP, and deployed Akira ransomware, with infrastructure overlap tying the campaign to a parallel Ivanti-VPN credential-stealer operation.</p>
+        <p class="why">A full DLL-sideloading and beacon-chain writeup laid out end to end — useful ground truth for implant and loader design as well as detection-evasion tradecraft.</p>
+        <p class="byline"><a href="https://thedfirreport.com/2026/06/29/from-bing-search-to-ransomware-bumblebee-and-adaptixc2-deliver-akira-3">The DFIR Report</a></p>
+      </article>
+      
+      <article>
+        <a class="story-link" href="https://thedfirreport.com/2026/05/11/flash-alert-etherrat-and-tuktuk-c2-end-in-the-gentleman-ransomware"><h4>A Blockchain-Backed C2 and an AI-Built Malware Framework Walk Into a Domain</h4></a>
+        <p class="summary">The DFIR Report's flash alert covers EtherRAT, which resolves its C2 configuration via Ethereum smart contracts (EtherHiding), handing off to TukTuk — a malware framework reportedly AI-generated — that can fall back on Arweave blockchain dead-drops and a grab-bag of SaaS platforms like ClickHouse, Supabase, Dropbox, and GitHub Issues for resilient command and control. The intrusion ends in domain-wide deployment of The Gentlemen ransomware via a malicious Group Policy Object.</p>
+        <p class="why">Decentralized, SaaS-abusing C2 architecture is where evasion tradecraft is heading — solid blueprint material for your own C2 and EDR-evasion experiments.</p>
+        <p class="byline"><a href="https://thedfirreport.com/2026/05/11/flash-alert-etherrat-and-tuktuk-c2-end-in-the-gentleman-ransomware">The DFIR Report</a></p>
+      </article>
+      
+    </div>
+  </section>
+  
+
+  <footer>
+    <p>Curated and composed by AI from your feeds. Every headline links to the original.</p>
+    <p><a href="https://github.com/mars-sec/frontline">GitHub</a> | <a href="https://marshallyanis.com/frontline">About this project</a></p>
+  </footer>
 </div>
 </body>
 </html>
