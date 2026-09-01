@@ -1,6 +1,6 @@
 # Frontline
 
-AI-scored daily newspaper from your RSS feeds.
+Claude kept refusing to tell me modern research on malware and EDR systems, so why not make it give me the research each morning? Here's frontline: an AI-scored daily newspaper from your RSS feeds.
 
 Frontline pulls articles from your RSS feeds, scores them against your interests using AI, composes a daily broadsheet newspaper, and renders it as a static HTML page you can host anywhere.
 
