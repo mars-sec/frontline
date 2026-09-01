@@ -69,6 +69,16 @@ def cmd_run(args) -> None:
         print(f"Edition {today} already exists. Use --force to rebuild.")
         return
 
+    # Back up existing edition file before overwriting
+    edition_file = Path(config.EDITIONS_DIR) / f"{today}.html"
+    if args.force and edition_file.exists():
+        rev = 1
+        while (edition_file.with_stem(f"{today}_{rev}")).exists():
+            rev += 1
+        backup = edition_file.with_stem(f"{today}_{rev}")
+        edition_file.rename(backup)
+        print(f"  backed up previous edition to {backup.name}")
+
     # Stage 1: Pipeline (collect, extract, enrich, embed, dedup, score, rank)
     from .run import run_cycle
     use_batch = not args.sync
