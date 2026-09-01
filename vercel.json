@@ -1,3 +1,5 @@
 {
-  "outputDirectory": "editions"
+  "buildCommand": "",
+  "outputDirectory": "editions",
+  "framework": null
 }
