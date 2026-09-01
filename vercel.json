@@ -4,7 +4,7 @@
   "framework": null,
   "redirects": [
     {
-      "source": "/((?!index\\.html$|favicon\\.).*)",
+      "source": "/:path((?!favicon\\.).+)",
       "destination": "/",
       "permanent": false
     }
