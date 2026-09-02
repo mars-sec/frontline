@@ -19,6 +19,20 @@ ACCEPT_FEED = (
     "application/xml, text/xml, */*"
 )
 
+_client: httpx.Client | None = None
+
+
+def _get_client() -> httpx.Client:
+    global _client
+    if _client is None:
+        _client = httpx.Client(
+            headers={"User-Agent": USER_AGENT},
+            follow_redirects=True,
+            timeout=20.0,
+            limits=httpx.Limits(max_connections=8, max_keepalive_connections=4),
+        )
+    return _client
+
 _TRACKING_PREFIXES = (
     "utm_", "mc_", "ref", "fbclid", "gclid", "igshid", "spm",
 )
@@ -54,7 +68,7 @@ def fetch_conditional(store: Store, url: str,
     304 means nothing changed; callers skip re-processing.
     0 means network error.
     """
-    headers = {"User-Agent": USER_AGENT, "Accept": ACCEPT_FEED}
+    headers = {"Accept": ACCEPT_FEED}
     cached = store.get_http_cache(url)
     if cached:
         if cached.get("etag"):
@@ -62,8 +76,7 @@ def fetch_conditional(store: Store, url: str,
         if cached.get("last_modified"):
             headers["If-Modified-Since"] = cached["last_modified"]
     try:
-        resp = httpx.get(url, headers=headers, timeout=timeout,
-                         follow_redirects=True)
+        resp = _get_client().get(url, headers=headers, timeout=timeout)
     except httpx.HTTPError:
         return 0, ""
     if resp.status_code == 304:
