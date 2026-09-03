@@ -8,6 +8,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends git && \
 WORKDIR /repo
 
 COPY daily.sh /daily.sh
-RUN chmod +x /daily.sh
+RUN sed -i 's/\r$//' /daily.sh && chmod +x /daily.sh
 
 CMD ["/daily.sh"]
