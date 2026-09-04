@@ -11,11 +11,12 @@ from .embeddings import get_embedder
 from .models import Article
 from .pipeline.dedup import cluster_articles, representatives
 from .pipeline.enrich import build_kev_set, enrich
-from .pipeline.extract import extract_fulltext
+from .pipeline.extract import close_client as close_extract_client, extract_fulltext
 from .pipeline.prefilter import prefilter
 from .pipeline.rank import compute_ranks, select_top
 from .scoring import get_scorer
 from .sources import ADAPTERS
+from .sources.base import close_client as close_source_client
 from .store import Store
 
 log = logging.getLogger("frontline.run")
@@ -115,6 +116,10 @@ def run_cycle(settings: Settings | None = None,
 
     # 3) Enrich (CVE ids, KEV cross-ref, PoC hints)
     _enrich(new_articles, store)
+
+    # Close HTTP clients to free TCP connections before scoring
+    close_source_client()
+    close_extract_client()
 
     # 4) Load the full scoring window from DB
     window_rows = store.get_articles_since(since)

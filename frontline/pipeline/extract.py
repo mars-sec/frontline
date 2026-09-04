@@ -28,6 +28,13 @@ def _get_client() -> httpx.Client:
     return _client
 
 
+def close_client() -> None:
+    global _client
+    if _client is not None:
+        _client.close()
+        _client = None
+
+
 def extract_fulltext(article: Article, timeout: float = 20.0,
                      min_chars: int = 400) -> Article:
     """Populate article.content in place. Returns the same article."""

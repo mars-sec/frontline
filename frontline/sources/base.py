@@ -33,6 +33,13 @@ def _get_client() -> httpx.Client:
         )
     return _client
 
+
+def close_client() -> None:
+    global _client
+    if _client is not None:
+        _client.close()
+        _client = None
+
 _TRACKING_PREFIXES = (
     "utm_", "mc_", "ref", "fbclid", "gclid", "igshid", "spm",
 )
