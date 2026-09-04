@@ -162,6 +162,8 @@ class Store:
 
     def add_article(self, a: Article) -> int | None:
         """Insert if unseen (dedup by URL hash, then title key). Returns row ID or None."""
+        if not a.url or "://" not in a.url or not a.url.split("://", 1)[1].split("/", 1)[0]:
+            return None
         uhash = url_hash(a.url)
         if self.conn.execute(
             "SELECT 1 FROM articles WHERE url_hash = ?", (uhash,)
@@ -231,10 +233,13 @@ class Store:
             "s.score * a.weight AS wscore "
             "FROM articles a JOIN scores s ON a.id = s.article_id "
             "WHERE a.edition_date IS NULL "
-            "AND s.score * a.weight >= ? AND a.fetched_at >= ? "
+            "AND s.score * a.weight >= ? "
+            "AND a.fetched_at >= ? "
+            "AND (a.published = '' OR a.published >= ?) "
+            "AND a.url LIKE 'http%://%.__%' "
             "AND (s.is_fluff = 0 OR ? = 0) "
             "ORDER BY wscore DESC, a.fetched_at DESC LIMIT ?",
-            (min_score, cutoff, int(drop_fluff), limit),
+            (min_score, cutoff, cutoff, int(drop_fluff), limit),
         ).fetchall()
 
     def mark_published(self, article_ids: list[int],
